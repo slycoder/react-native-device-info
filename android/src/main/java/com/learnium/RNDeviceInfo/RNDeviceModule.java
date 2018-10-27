@@ -373,7 +373,6 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
         if (!activity.isFinishing()) {
           Log.d("PhyseraGL", "Attaching View");
           ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
-          // Validate that video chat still works ok!
           rootView.addView(dummyView);
         }
       }
