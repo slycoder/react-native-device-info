@@ -29,7 +29,7 @@ const devicesWithNotch = [
   {
     brand: 'Asus',
     model: 'ZenFone 5',
-  }, 
+  },
   {
     brand: 'Asus',
     model: 'ZenFone 5z',
@@ -245,5 +245,8 @@ export default {
   },
   isAirPlaneMode: function() {
     return RNDeviceInfo.isAirPlaneMode();
-  }
+  },
+  getGPURenderer: function() {
+    return RNDeviceInfo.getGPURenderer();
+  },
 };

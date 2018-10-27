@@ -24,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
 import android.app.ActivityManager;
 import android.util.DisplayMetrics;
+import android.opengl.GLES20;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -181,7 +182,7 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
       }
     }
 
-    p.resolve(macAddress);    
+    p.resolve(macAddress);
   }
 
   @ReactMethod
@@ -230,6 +231,11 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
         isAirPlaneMode = Settings.Global.getInt(this.reactContext.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
     }
     p.resolve(isAirPlaneMode);
+  }
+
+  @ReactMethod
+  public String getGPURenderer(Promise p) {
+    return GLES20.glGetString(GLES20.GL_RENDERER);
   }
 
   public String getInstallReferrer() {
@@ -329,7 +335,7 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
     actMgr.getMemoryInfo(memInfo);
     constants.put("totalMemory", memInfo.totalMem);
-
+    constants.put("gpuRenderer", this.getGPURenderer());
     return constants;
   }
 }
