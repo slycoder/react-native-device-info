@@ -233,8 +233,7 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     p.resolve(isAirPlaneMode);
   }
 
-  @ReactMethod
-  public String getGPURenderer(Promise p) {
+  private String getGPURenderer() {
     return GLES20.glGetString(GLES20.GL_RENDERER);
   }
 
