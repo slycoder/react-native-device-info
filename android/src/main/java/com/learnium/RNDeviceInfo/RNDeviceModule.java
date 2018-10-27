@@ -346,6 +346,7 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     dummyView.setRenderer(new GLSurfaceView.Renderer() {
       @Override
       public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        Log.d("PhyseraGL", "Surface created");
         p.resolve(gl.glGetString(GL10.GL_RENDERER));
         activity.runOnUiThread(new Runnable() {
           @Override
@@ -364,10 +365,13 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
       public void onDrawFrame(GL10 gl) {
       }
     });
+    dummyView.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
+    dummyView.setAlpha(0.0f);
     activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
         if (!activity.isFinishing()) {
+          Log.d("PhyseraGL", "Attaching View");
           ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
           // Validate that video chat still works ok!
           rootView.addView(dummyView);
