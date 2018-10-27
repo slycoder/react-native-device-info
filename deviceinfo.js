@@ -247,6 +247,6 @@ export default {
     return RNDeviceInfo.isAirPlaneMode();
   },
   getGPURenderer: function() {
-    return RNDeviceInfo.gpuRenderer;
+    return RNDeviceInfo.getGPURenderer();
   },
 };

@@ -3,6 +3,7 @@ package com.learnium.RNDeviceInfo;
 import android.Manifest;
 import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.Intent;
@@ -24,7 +25,11 @@ import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
 import android.app.ActivityManager;
 import android.util.DisplayMetrics;
-import android.opengl.GLES20;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.opengl.GLSurfaceView;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -233,10 +238,6 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     p.resolve(isAirPlaneMode);
   }
 
-  private String getGPURenderer() {
-    return GLES20.glGetString(GLES20.GL_RENDERER);
-  }
-
   public String getInstallReferrer() {
     SharedPreferences sharedPref = getReactApplicationContext().getSharedPreferences("react-native-device-info", Context.MODE_PRIVATE);
     return sharedPref.getString("installReferrer", null);
@@ -334,7 +335,45 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
     actMgr.getMemoryInfo(memInfo);
     constants.put("totalMemory", memInfo.totalMem);
-    constants.put("gpuRenderer", this.getGPURenderer());
     return constants;
+  }
+
+  @ReactMethod
+  public String getGPURenderer(final Promise p) {
+    Context context = getReactApplicationContext();
+    final GLSurfaceView dummyView = new GLSurfaceView(context);
+    final Activity activity = getCurrentActivity();
+    dummyView.setRenderer(new GLSurfaceView.Renderer() {
+      @Override
+      public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        p.resolve(gl.glGetString(GL10.GL_RENDERER));
+        activity.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+            rootView.removeView(dummyView);
+          }
+        });
+      }
+
+      @Override
+      public void onSurfaceChanged(GL10 gl, int w, int h) {
+      }
+
+      @Override
+      public void onDrawFrame(GL10 gl) {
+      }
+    });
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (!activity.isFinishing()) {
+          ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+          // Validate that video chat still works ok!
+          rootView.addView(dummyView);
+        }
+      }
+    });
+    return null;
   }
 }
