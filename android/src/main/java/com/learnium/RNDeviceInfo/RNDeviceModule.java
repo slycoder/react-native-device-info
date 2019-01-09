@@ -367,16 +367,18 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     });
     dummyView.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
     dummyView.setAlpha(0.0f);
-    activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (!activity.isFinishing()) {
-          Log.d("PhyseraGL", "Attaching View");
-          ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
-          rootView.addView(dummyView);
+    if (activity) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if (!activity.isFinishing()) {
+            Log.d("PhyseraGL", "Attaching View");
+            ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+            rootView.addView(dummyView);
+          }
         }
-      }
-    });
+      });
+    }
     return null;
   }
 }
