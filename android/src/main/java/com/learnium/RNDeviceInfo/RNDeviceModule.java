@@ -367,7 +367,7 @@ public class RNDeviceModule extends ReactContextBaseJavaModule {
     });
     dummyView.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
     dummyView.setAlpha(0.0f);
-    if (activity) {
+    if (activity != null) {
       activity.runOnUiThread(new Runnable() {
         @Override
         public void run() {
